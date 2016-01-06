@@ -1,0 +1,29 @@
+{
+  "name": "stylelint-loader",
+  "version": "0.1.0",
+  "description": "A webpack loader for checking stylesheets with stylelint",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+      "stylelint",
+      "lint",
+      "linter",
+      "loader",
+      "webpack",
+      "webpack-loader",
+      "sass-lint",
+      "scss-lint"
+  ],
+  "author": "Adrian Hall <adrian@shellmonger.com>",
+  "license": "MIT",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/adrianhall/stylelint-loader"
+  },
+  "bugs": {
+      "url": "https://github.com/adrianhall/stylelint-loader/issues"
+  },
+  "homepage": "https://github.com/adrianhall/stylelint-loader"
+}
