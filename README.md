@@ -2,7 +2,7 @@
 
 [Stylelint] is a modern linter that helps you enforce consistent conventions  and
 avoid errors in your stylesheets.  Powered by [PostCSS], [stylelint] can understand
-any syntax that PostCSS can parse, including SCSS.
+any syntax that PostCSS can parse, including SASS and SCSS.
 
 Stylelint-loader is a [Webpack] wrapper for handling stylelint verification while
 using webpack.
