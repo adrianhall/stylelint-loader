@@ -7,23 +7,43 @@
     "test": "mocha"
   },
   "keywords": [
-      "stylelint",
-      "lint",
-      "linter",
-      "loader",
-      "webpack",
-      "webpack-loader",
-      "sass-lint",
-      "scss-lint"
+    "stylelint",
+    "lint",
+    "linter",
+    "loader",
+    "webpack",
+    "webpack-loader",
+    "sass-lint",
+    "scss-lint"
   ],
   "author": "Adrian Hall <adrian@shellmonger.com>",
   "license": "MIT",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/adrianhall/stylelint-loader"
+    "type": "git",
+    "url": "https://github.com/adrianhall/stylelint-loader"
   },
   "bugs": {
-      "url": "https://github.com/adrianhall/stylelint-loader/issues"
+    "url": "https://github.com/adrianhall/stylelint-loader/issues"
   },
-  "homepage": "https://github.com/adrianhall/stylelint-loader"
+  "homepage": "https://github.com/adrianhall/stylelint-loader",
+  "peerDependencies": {
+    "stylelint": "^3.2.0"
+  },
+  "dependencies": {
+    "loader-utils": "^0.2.12",
+    "object-assign": "^4.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.0",
+    "file-loader": "^0.8.5",
+    "memory-fs": "^0.3.0",
+    "mocha": "^2.3.4",
+    "node-sass": "^3.4.2",
+    "sass-loader": "^3.1.2",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.9",
+    "webpack-sources": "^0.1.0"
+  }
 }
