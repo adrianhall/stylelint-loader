@@ -58,7 +58,7 @@ If you do not specify config or configFile, then stylelint-loader will look in t
 [standard rc-file places](https://github.com/dominictarr/rc#standards) for a .stylelint.config.js
 file.
 
-For more information, please review the [stylelint node API documentation]https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md).
+For more information, please review the [stylelint node API documentation](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md).
 
 
 ## More Information
