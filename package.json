@@ -1,6 +1,6 @@
 {
   "name": "stylelint-loader",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A webpack loader for checking SASS and SCSS stylesheets with stylelint",
   "main": "index.js",
   "scripts": {
