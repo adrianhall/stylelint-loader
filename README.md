@@ -1,5 +1,5 @@
 [![Dependency Status](https://david-dm.org/adrianhall/stylelint-loader.svg)](https://david-dm.org/adrianhall/stylelint-loader)
-[![devDependency Status](https://david-dm.orgadrianhall/stylelint-loader/dev-status.svg)](https://david-dm.org/adrianhall/stylelint-loader#info=devDependencies)
+[![devDependency Status](https://david-dm.org/adrianhall/stylelint-loader.svg#info=devDependencies)](https://david-dm.org/adrianhall/stylelint-loader#info=devDependencies)
 
 # stylelint-loader
 
