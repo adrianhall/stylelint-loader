@@ -22,7 +22,7 @@ var baseConfig = {
         ]
     },
     stylelint: {
-        displayOutput: false,
+        displayOutput: true,
         ignoreCache: true
     }
 };
@@ -41,7 +41,7 @@ var extractConfig = {
         ]
     },
     stylelint: {
-        displayOutput: false
+        displayOutput: true
     },
     plugins: [
         new ExtractTextPlugin(path.join(__dirname, 'output/bundle.css'))
