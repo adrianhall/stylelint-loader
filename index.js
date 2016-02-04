@@ -56,6 +56,10 @@ function printWarningOrError(warning, options, context) {
         if (options.displayOutput)
             console.log(chalk.red(text));
         context.emitError(text);
+    } else if (typeof warning.severity === 'undefined') {
+        if (options.displayOutput)
+            console.log(chalk.red(warning.text));
+        context.emitError(text);
     }
 }
 

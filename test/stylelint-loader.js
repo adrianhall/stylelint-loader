@@ -168,4 +168,20 @@ describe('stylelint-loader', function () {
             done(err);
         });
     });
+
+    it('should report errors in rules', function (done) {
+        var config = {
+            entry: './test/testfiles/test8',
+            stylelint: {
+                configFile: path.join(__dirname, './testfiles/stylelintrc.1.js')
+            }
+        };
+
+        pack(assign({}, extractConfig, config), function (err, stats) {
+            expect(err).to.not.exist;
+            expect(stats.compilation.errors.length).to.equal(1);
+            expect(stats.compilation.warnings.length).to.equal(0);
+            done(err);
+        });
+    });
 });
