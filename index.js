@@ -35,6 +35,31 @@ function relativePath(filePath) {
 }
 
 /**
+ * Display a single error or warning
+ * @param {Object} warning the warning object
+ * @param {Number} warning.line the line number
+ * @param {Number} warning.column the column number
+ * @param {string} warning.text the error or warning message
+ * @param {string} warning.severity the severity (warning or error)
+ * @param {Object} options the loader options
+ * @param {Object} context the Webpack context
+ * @returns {void}
+ */
+function printWarningOrError(warning, options, context) {
+    var text = `${warning.line}:${warning.column} ${warning.text}`;
+
+    if (warning.severity === 'warning') {
+        if (options.displayOutput)
+            console.log(chalk.yellow(text));
+        context.emitWarning(text);
+    } else if (warning.severity === 'error') {
+        if (options.displayOutput)
+            console.log(chalk.red(text));
+        context.emitError(text);
+    }
+}
+
+/**
  * Lint the provided file
  */
 function linter(content, options, context, callback) {
@@ -65,22 +90,7 @@ function linter(content, options, context, callback) {
     .then(result => {
         if (options.displayOutput && result.warnings.length > 0) {
             console.log(chalk.blue.underline.bold(filePath));
-        }
-        result.warnings.forEach(warning => {
-            var position = `${warning.line}:${warning.column}`;
-            if (warning.severity === 'warning') {
-                if (options.displayOutput) {
-                    console.log(chalk.yellow(`${position} ${warning.text}`));
-                }
-                context.emitWarning(`${position} ${warning.text}`);
-            } else if (warning.severity === 'error') {
-                if (options.displayOutput) {
-                    console.log(chalk.red(`${position} ${warning.text}`));
-                }
-                context.emitError(`${position} ${warning.text}`);
-            }
-        });
-        if (options.displayOutput && result.warnings.length > 0) {
+            result.warnings.forEach(warning => { printWarningOrError(warning, options, context); });
             console.log('');
         }
         callback(null, content);
