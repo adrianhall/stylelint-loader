@@ -17,64 +17,76 @@ var defaultOptions = {
 var lintedFiles = [];
 
 /**
+ * Determine if the provided file is in the cache
+ * @param {string} filePath the file to check
+ * @returns {bool} true if the file is in the cache
+ */
+function isCached(filePath) {
+    return lintedFiles.findIndex((t) => { return t === filePath; }) !== -1;
+}
+
+/**
+ * Returns the relative path
+ * @param {string} filePath the path to make relative
+ * @returns {string} the relative path
+ */
+function relativePath(filePath) {
+    return filePath.indexOf(__dirname) === 0 ? filePath.replace(__dirname, '.') : filePath;
+}
+
+/**
  * Lint the provided file
  */
 function linter(content, options, context, callback) {
+    var filePath = relativePath(context.resourcePath),
+        lintOptions = {};
+
     // Figure out if we need to process this file
-    var processFile = true;
     if (!options.ignoreCache) {
-        var fileIndex = lintedFiles.findIndex((t) => { return t === context.resourcePath; });
-        if (fileIndex === -1) {
+        if (!isCached(context.resourcePath)) {
             lintedFiles.push(context.resourcePath);
-            processFile = true;
         } else {
-            processFile = false;
+            if (callback) {
+                return callback(null, content);
+            }
+            return null;
         }
     }
 
-    // Display Path is what we show to the user
-    var filePath = context.resourcePath;
-    if (filePath.indexOf(__dirname) === 0) {
-        filePath = filePath.replace(__dirname, '.');
-    }
-
-    var lintOptions = assign({}, options, {
+    lintOptions = assign({}, options, {
         code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }),
         syntax: path.extname(filePath).replace('.', ''),
         formatter: 'json'
     });
 
-    if (processFile) {
-        stylelint.lint(lintOptions)
-            .then(result => { return result.results[0]; })
-            .then(result => {
-                if (options.displayOutput && result.warnings.length > 0) {
-                    console.log(chalk.blue.underline.bold(filePath));
+
+    stylelint.lint(lintOptions)
+    .then(result => { return result.results[0]; })
+    .then(result => {
+        if (options.displayOutput && result.warnings.length > 0) {
+            console.log(chalk.blue.underline.bold(filePath));
+        }
+        result.warnings.forEach(warning => {
+            var position = `${warning.line}:${warning.column}`;
+            if (warning.severity === 'warning') {
+                if (options.displayOutput) {
+                    console.log(chalk.yellow(`${position} ${warning.text}`));
                 }
-                result.warnings.forEach(warning => {
-                    var position = `${warning.line}:${warning.column}`;
-                    if (warning.severity === 'warning') {
-                        if (options.displayOutput) {
-                            console.log(chalk.yellow(`${position} ${warning.text}`));
-                        }
-                        context.emitWarning(`${position} ${warning.text}`);
-                    } else if (warning.severity === 'error') {
-                        if (options.displayOutput) {
-                            console.log(chalk.red(`${position} ${warning.text}`));
-                        }
-                        context.emitError(`${position} ${warning.text}`);
-                    }
-                });
-                if (options.displayOutput && result.warnings.length > 0) {
-                    console.log('');
+                context.emitWarning(`${position} ${warning.text}`);
+            } else if (warning.severity === 'error') {
+                if (options.displayOutput) {
+                    console.log(chalk.red(`${position} ${warning.text}`));
                 }
-                callback(null, content);
-            }).catch(error => {
-                callback(error);
-            });
-    } else if (callback) {
+                context.emitError(`${position} ${warning.text}`);
+            }
+        });
+        if (options.displayOutput && result.warnings.length > 0) {
+            console.log('');
+        }
         callback(null, content);
-    }
+    }).catch(error => {
+        callback(error);
+    });
 }
 
 /**
