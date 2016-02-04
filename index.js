@@ -1,7 +1,7 @@
 /* global __dirname */
 'use strict';
 
-var assign = require('object-assign'),
+var assign = require('deep-assign'),
     chalk = require('chalk'),
     fs = require('fs'),
     loaderUtils = require('loader-utils'),
@@ -65,7 +65,7 @@ function printWarningOrError(warning, options, context) {
  * @param {string|Buffer} content the content to be linted (not used in general)
  * @param {object} options the loader options
  * @param {object} context the webpack context
- * @param {function} callback the async callback
+ * @param {Function} callback the async callback
  * @returns {object} the result from the callback
  * @async
  */
@@ -78,17 +78,25 @@ function linter(content, options, context, callback) {
         if (!isCached(context.resourcePath))
             lintedFiles.push(context.resourcePath);
         else {
-            if (callback)
-                return callback(null, content);
-            return null;
+            return callback(null, content);
         }
 
     lintOptions = assign({}, options, {
-        code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }), // eslint-disable-line no-sync
+        code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }),
         syntax: path.extname(filePath).replace('.', ''),
         formatter: 'json'
     });
 
+    // If the config file does not exist, then produce a warning
+    if (lintOptions.configFile)
+        try {
+            fs.statSync(lintOptions.configFile, fs.R_OK);
+        } catch (error) {
+            if (options.displayOutput)
+                console.log(chalk.yellow(`Configuration File ${lintOptions.configFile} cannot be found/read`));
+            context.emitWarning(`Configuration File ${lintOptions.configFile} cannot be found/read`);
+            return callback(null, content);
+        }
 
     stylelint.lint(lintOptions)
     .then((result) => { return result.results[0]; })

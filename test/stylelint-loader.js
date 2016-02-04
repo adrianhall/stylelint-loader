@@ -1,6 +1,6 @@
 /* global __dirname, describe, it */
 var expect = require('chai').expect,
-    assign = require('object-assign'),
+    assign = require('deep-assign'),
     path = require('path'),
     webpack = require('webpack'),
     MemoryFileSystem = require('memory-fs'),
@@ -68,7 +68,6 @@ describe('stylelint-loader', function () {
             entry: './test/testfiles/test1'
         };
 
-        // Test 1 is a perfectly valid sass file
         pack(assign({}, baseConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(0);
@@ -82,7 +81,6 @@ describe('stylelint-loader', function () {
             entry: './test/testfiles/test2'
         };
 
-        // Test 2 should produce a warning because of the default settings
         pack(assign({}, baseConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(0);
@@ -96,7 +94,6 @@ describe('stylelint-loader', function () {
             entry: './test/testfiles/test3'
         };
 
-        // Test 3 should produce an error for the font-size units
         pack(assign({}, baseConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(1);
@@ -118,7 +115,6 @@ describe('stylelint-loader', function () {
             }
         };
 
-        // Test 4 (which is identical) should now pass
         pack(assign({}, baseConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(0);
@@ -135,11 +131,27 @@ describe('stylelint-loader', function () {
             }
         };
 
-        // Test 3 should now pass
         pack(assign({}, baseConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(0);
             expect(stats.compilation.warnings.length).to.equal(0);
+            done(err);
+        });
+    });
+
+
+    it('warns if the config file does not exist', function (done) {
+        var config = {
+            entry: './test/testfiles/test7',
+            stylelint: {
+                configFile: path.join(__dirname, './testfiles/WARN_stylelintrc.js')
+            }
+        };
+
+        pack(assign({}, baseConfig, config), function (err, stats) {
+            expect(err).to.not.exist;
+            expect(stats.compilation.errors.length).to.equal(0);
+            expect(stats.compilation.warnings.length).to.equal(1);
             done(err);
         });
     });
@@ -149,7 +161,6 @@ describe('stylelint-loader', function () {
             entry: './test/testfiles/test6'
         };
 
-        // Test 2 should produce a warning because of the default settings
         pack(assign({}, extractConfig, config), function (err, stats) {
             expect(err).to.not.exist;
             expect(stats.compilation.errors.length).to.equal(0);

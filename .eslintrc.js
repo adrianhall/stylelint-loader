@@ -90,7 +90,7 @@ module.exports = exports = {
         "no-self-compare": ERROR,
         "no-shadow-restricted-names": ERROR,
         "no-shadow": WARN,
-        "no-sync": WARN,
+        "no-sync": OFF, // this project needs sync access
         "no-this-before-super": ERROR,
         "no-throw-literal": ERROR,
         "no-undef-init": OFF,
@@ -116,7 +116,7 @@ module.exports = exports = {
         "radix": WARN,
         "require-yield": ERROR,
         "strict": [ ERROR, "global" ],
-        "vars-on-top": ERROR,
+        "vars-on-top": OFF,
         "wrap-iife": [ ERROR, "outside" ],
         "yoda": ERROR,
 
