@@ -70,3 +70,8 @@ Please check out all the options available via [stylelint]
 [stylelint]: http://stylelint.io
 [Webpack]: http://webpack.github.io/
 [lint configuration]: https://github.com/stylelint/stylelint/blob/3.2.0/docs/user-guide/configuration.md
+
+## Contributing
+
+Firstly, thanks for even thinking about contributing. We welcome pull requests and, since this is not sponsored by an organization,
+we don't have any fancy CLAs to fill in. Please follow our [Contributing Guide](CONTRIBUTING.md) to get started.
