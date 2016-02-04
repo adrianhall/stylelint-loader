@@ -22,7 +22,7 @@ var lintedFiles = [];
  * @returns {bool} true if the file is in the cache
  */
 function isCached(filePath) {
-    return lintedFiles.findIndex((t) => { return t === filePath; }) !== -1;
+    return lintedFiles.findIndex((entry) => { return entry === filePath; }) !== -1;
 }
 
 /**
@@ -61,41 +61,46 @@ function printWarningOrError(warning, options, context) {
 
 /**
  * Lint the provided file
+ *
+ * @param {string|Buffer} content the content to be linted (not used in general)
+ * @param {object} options the loader options
+ * @param {object} context the webpack context
+ * @param {function} callback the async callback
+ * @returns {object} the result from the callback
+ * @async
  */
 function linter(content, options, context, callback) {
     var filePath = relativePath(context.resourcePath),
         lintOptions = {};
 
     // Figure out if we need to process this file
-    if (!options.ignoreCache) {
-        if (!isCached(context.resourcePath)) {
+    if (!options.ignoreCache)
+        if (!isCached(context.resourcePath))
             lintedFiles.push(context.resourcePath);
-        } else {
-            if (callback) {
+        else {
+            if (callback)
                 return callback(null, content);
-            }
             return null;
         }
-    }
 
     lintOptions = assign({}, options, {
-        code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }),
+        code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }), // eslint-disable-line no-sync
         syntax: path.extname(filePath).replace('.', ''),
         formatter: 'json'
     });
 
 
     stylelint.lint(lintOptions)
-    .then(result => { return result.results[0]; })
-    .then(result => {
+    .then((result) => { return result.results[0]; })
+    .then((result) => {
         if (options.displayOutput && result.warnings.length > 0) {
             console.log(chalk.blue.underline.bold(filePath));
-            result.warnings.forEach(warning => { printWarningOrError(warning, options, context); });
+            result.warnings.forEach((warning) => { printWarningOrError(warning, options, context); });
             console.log('');
         }
-        callback(null, content);
-    }).catch(error => {
-        callback(error);
+        return callback(null, content);
+    }).catch((error) => {
+        return callback(error);
     });
 }
 
@@ -103,19 +108,20 @@ function linter(content, options, context, callback) {
  * Webpack Loader Definition
  *
  * @param {string|buffer} content = the content to be linted
+ * @returns {object} the result of the callback
  */
-module.exports = function(content) {
-    this.cacheable && this.cacheable();
+module.exports = function (content) {
     var callback = this.async();
-
     var packOptions = this.options.stylelint || {};
     var loaderOptions = loaderUtils.parseQuery(this.query);
     var options = assign({}, defaultOptions, packOptions, loaderOptions);
+
+    if (this.cacheable) this.cacheable();
 
     try {
         linter(content, options, this, callback);
     } catch (error) {
         console.error('[stylelint-loader] error = ', error.stack);
-        callback(error);
+        return callback(error);
     }
 };
