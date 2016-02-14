@@ -114,6 +114,9 @@ function linter(content, options, context, callback) {
     }).catch((error) => {
         return callback(error);
     });
+
+    // If we get here, we are complete, but synchronous, so just return something
+    return null;
 }
 
 /**
@@ -131,7 +134,7 @@ module.exports = function (content) {
     if (this.cacheable) this.cacheable();
 
     try {
-        linter(content, options, this, callback);
+        return linter(content, options, this, callback);
     } catch (error) {
         console.error('[stylelint-loader] error = ', error.stack);
         return callback(error);
