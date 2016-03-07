@@ -169,6 +169,7 @@ describe('stylelint-loader', function () {
         });
     });
 
+    // ERROR: stylelint no longer reports error in config as error
     it('should report errors in rules', function (done) {
         var config = {
             entry: './test/testfiles/test8',
