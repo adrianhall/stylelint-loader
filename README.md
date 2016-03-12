@@ -45,21 +45,18 @@ module.exports = {
 
 ## Options
 
-Create your [lint configuration] in the same way as stylelint.  Specify the
-configuration file, probably as a stylelint.config.js file, in the stylelint
-section of the webpack.config.js.
+Create your [lint configuration] in the same way as stylelint.  Specify the configuration file,
+probably as a .stylelintrc file, in the stylelint section of the webpack.config.js.
 
-You can specify the following options in the stylelint section of your
-webpack.config.js file:
+You can specify the following options in the stylelint section of your webpack.config.js file:
 
 * **config** is a stylelint configuration object
 * **configFile** is the path to a JSON, YAML or JS file that contains your configuration
 * **configBasedir** is an absolute path to a directory for relative paths defining extends and plugins in your configuration
 * **configOverrides** is a partial stylelint configuration object
 
-If you do not specify config or configFile, then stylelint-loader will look in the
-[standard rc-file places](https://github.com/dominictarr/rc#standards) for a stylelint.config.js
-file.
+If you do not specify config or configFile, then stylelint-loader will use the standard stylelint
+semantics for finding a configuration file.  You can see the current rules in the [stylelint User Guide](https://stylelint.io/user-guide/configuration/).
 
 For more information, please review the [stylelint node API documentation](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md).
 
@@ -72,7 +69,7 @@ Please check out all the options available via [stylelint]
 [PostCSS]: https://github.com/postcss/postcss
 [stylelint]: http://stylelint.io
 [Webpack]: http://webpack.github.io/
-[lint configuration]: https://github.com/stylelint/stylelint/blob/3.2.0/docs/user-guide/configuration.md
+[lint configuration]: http://stylelint.io/user-guide/configuration/
 
 ## Contributing
 

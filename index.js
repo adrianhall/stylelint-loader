@@ -9,7 +9,6 @@ var assign = require('deep-assign'),
     stylelint = require('stylelint');
 
 var defaultOptions = {
-    configFile: './stylelint.config.js',
     displayOutput: true,
     ignoreCache: false
 };
