@@ -6,6 +6,12 @@ var expect = require('chai').expect,
     MemoryFileSystem = require('memory-fs'),
     ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+/*
+** DISPLAY_OUTPUT
+**  Set env:MOCHA_DISPLAY_MODE to true if you want to see the errors from stylelint
+*/
+var displayOutput = (typeof process.env.MOCHA_DISPLAY_MODE !== 'undefined' && process.env.MOCHA_DISPLAY_MODE === 'true');
+
 var loaderUnderTest = path.join(__dirname, '../index');
 
 var baseConfig = {
@@ -22,7 +28,7 @@ var baseConfig = {
         ]
     },
     stylelint: {
-        displayOutput: true,
+        displayOutput: displayOutput,
         ignoreCache: true
     }
 };
@@ -41,7 +47,7 @@ var extractConfig = {
         ]
     },
     stylelint: {
-        displayOutput: true
+        displayOutput: displayOutput
     },
     plugins: [
         new ExtractTextPlugin(path.join(__dirname, 'output/bundle.css'))
@@ -63,7 +69,7 @@ function pack(testConfig, callback) {
  * Test Suite
  */
 describe('stylelint-loader', function () {
-    it('works with a simple file', function (done) {
+    it('T1:works with a simple file', function (done) {
         var config = {
             entry: './test/testfiles/test1'
         };
@@ -76,7 +82,7 @@ describe('stylelint-loader', function () {
         });
     });
 
-    it('sends warnings properly', function (done) {
+    it('T2:sends warnings properly', function (done) {
         var config = {
             entry: './test/testfiles/test2'
         };
@@ -89,7 +95,7 @@ describe('stylelint-loader', function () {
         });
     });
 
-    it('sends errors properly', function (done) {
+    it('T3:sends errors properly', function (done) {
         var config = {
             entry: './test/testfiles/test3'
         };
@@ -102,7 +108,7 @@ describe('stylelint-loader', function () {
         });
     });
 
-    it('can specify a rule via config', function (done) {
+    it('T4:can specify a rule via config', function (done) {
         var config = {
             entry: './test/testfiles/test4',
             stylelint: {
@@ -123,7 +129,7 @@ describe('stylelint-loader', function () {
         });
     });
 
-    it('can specify a config file via config', function (done) {
+    it('T5:can specify a config file via config', function (done) {
         var config = {
             entry: './test/testfiles/test5',
             stylelint: {
@@ -139,8 +145,20 @@ describe('stylelint-loader', function () {
         });
     });
 
+    it('T6:should only report once when using ExtractText', function (done) {
+        var config = {
+            entry: './test/testfiles/test6'
+        };
 
-    it('warns if the config file does not exist', function (done) {
+        pack(assign({}, extractConfig, config), function (err, stats) {
+            expect(err).to.not.exist;
+            expect(stats.compilation.errors.length).to.equal(0);
+            expect(stats.compilation.warnings.length).to.equal(1);
+            done(err);
+        });
+    });
+
+    it('T7:warns if the config file does not exist', function (done) {
         var config = {
             entry: './test/testfiles/test7',
             stylelint: {
@@ -156,21 +174,7 @@ describe('stylelint-loader', function () {
         });
     });
 
-    it('should only report once when using ExtractText', function (done) {
-        var config = {
-            entry: './test/testfiles/test6'
-        };
-
-        pack(assign({}, extractConfig, config), function (err, stats) {
-            expect(err).to.not.exist;
-            expect(stats.compilation.errors.length).to.equal(0);
-            expect(stats.compilation.warnings.length).to.equal(1);
-            done(err);
-        });
-    });
-
-    // ERROR: stylelint no longer reports error in config as error
-    it('should report errors in rules', function (done) {
+    it('T8:should report errors in rules', function (done) {
         var config = {
             entry: './test/testfiles/test8',
             stylelint: {
@@ -185,4 +189,18 @@ describe('stylelint-loader', function () {
             done(err);
         });
     });
+
+    // THIS DOES NOT WORK WITH STYLELINT (v4.5.1)
+    // it('T9:works with included files', function (done) {
+    //     var config = {
+    //         entry: './test/testfiles/test9'
+    //     };
+
+    //     pack(assign({}, baseConfig, config), function (err, stats) {
+    //         expect(err).to.not.exist;
+    //         expect(stats.compilation.errors.length).to.equal(1);
+    //         expect(stats.compilation.warnings.length).to.equal(0);
+    //         done(err);
+    //     });
+    // });
 });

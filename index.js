@@ -9,7 +9,7 @@ var assign = require('deep-assign'),
     stylelint = require('stylelint');
 
 var defaultOptions = {
-    configFile: './.stylelint.config.js',
+    configFile: './stylelint.config.js',
     displayOutput: true,
     ignoreCache: false
 };
@@ -48,7 +48,7 @@ function relativePath(filePath) {
 function printWarningOrError(warning, options, context) {
     var text = `${warning.line}:${warning.column} ${warning.text}`;
 
-    if (warning.severity === 'warning') {
+    if (warning.severity === 'warning' || warning.severity === 'warn') {
         if (options.displayOutput)
             console.log(chalk.yellow(text));
         context.emitWarning(text);
@@ -86,7 +86,7 @@ function linter(content, options, context, callback) {
         }
 
     lintOptions = assign({}, options, {
-        code: fs.readFileSync(context.resourcePath, { encoding: 'utf-8' }),
+        files: context.resourcePath,
         syntax: path.extname(filePath).replace('.', ''),
         formatter: 'json'
     });
@@ -103,13 +103,46 @@ function linter(content, options, context, callback) {
         }
 
     stylelint.lint(lintOptions)
-    .then((result) => { return result.results[0]; })
     .then((result) => {
-        if (options.displayOutput && result.warnings.length > 0) {
+        return result.results[0];
+    })
+    .then((result) => {
+        var hasWarnings = typeof result.warnings !== 'undefined' &&
+                            Array.isArray(result.warnings) &&
+                            result.warnings.length > 0;
+        var hasDeprecations = typeof result.deprecations !== 'undefined' &&
+                            Array.isArray(result.deprecations) &&
+                            result.deprecations.length > 0;
+        var hasInvalidOptions = typeof result.invalidOptionWarnings !== 'undefined' &&
+                            Array.isArray(result.invalidOptionWarnings) &&
+                            result.invalidOptionWarnings.length > 0;
+
+        if (options.displayOutput && (hasWarnings || hasDeprecations || hasInvalidOptions))
             console.log(chalk.blue.underline.bold(filePath));
-            result.warnings.forEach((warning) => { printWarningOrError(warning, options, context); });
+
+        if (hasDeprecations)
+            result.deprecations.forEach((deprecation) => {
+                deprecation.severity = 'warn';
+                deprecation.line = deprecation.line || 'config';
+                deprecation.column = deprecation.column || 'deprecated';
+                printWarningOrError(deprecation, options, context);
+            });
+
+        if (hasInvalidOptions)
+            result.invalidOptionWarnings.forEach((warning) => {
+                warning.severity = 'error';
+                warning.line = warning.line || 'config';
+                warning.column = warning.column || 'invalid';
+                printWarningOrError(warning, options, context);
+            });
+
+        if (hasWarnings)
+            result.warnings.forEach((warning) => {
+                printWarningOrError(warning, options, context);
+            });
+
+        if (options.displayOutput && (hasWarnings || hasDeprecations || hasInvalidOptions))
             console.log('');
-        }
         return callback(null, content);
     }).catch((error) => {
         return callback(error);
