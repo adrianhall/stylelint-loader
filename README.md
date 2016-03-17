@@ -60,6 +60,13 @@ semantics for finding a configuration file.  You can see the current rules in th
 
 For more information, please review the [stylelint node API documentation](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/node-api.md).
 
+## Recursively Linting with Stylelint
+
+Stylelint does not do a good job of handling imported files, and stylelint-loader is a wrapper around stylelint, so it
+inherits all the bugs and issues of stylelint.  You can use the [stylelint-webpack-plugin] to recursively lint all your
+stylesheets.  See the [stylelint-webpack-plugin] for more details (and thanks to @vieron for providing the plugin).
+
+I'm likely to be shutting down stylelint-loader in preference to the stylelint-webpack-plugin in the future.
 
 ## More Information
 
@@ -70,6 +77,7 @@ Please check out all the options available via [stylelint]
 [stylelint]: http://stylelint.io
 [Webpack]: http://webpack.github.io/
 [lint configuration]: http://stylelint.io/user-guide/configuration/
+[stylelint-webpack-plugin]: https://www.npmjs.com/package/stylelint-webpack-plugin
 
 ## Contributing
 
