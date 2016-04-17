@@ -31,12 +31,12 @@
     "stylelint": "^5.0.0"
   },
   "dependencies": {
+    "chalk": "^1.1.1",
     "deep-assign": "^2.0.0",
     "loader-utils": "^0.2.12"
   },
   "devDependencies": {
     "chai": "^3.4.1",
-    "chalk": "^1.1.1",
     "css-loader": "^0.23.1",
     "eslint": "^2.0.0",
     "extract-text-webpack-plugin": "^1.0.0",
