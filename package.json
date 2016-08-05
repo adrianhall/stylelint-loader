@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/adrianhall/stylelint-loader",
   "peerDependencies": {
-    "stylelint": "^6.0.0"
+    "stylelint": "^7.1.0"
   },
   "dependencies": {
     "chalk": "^1.1.1",
