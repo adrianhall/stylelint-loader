@@ -86,7 +86,6 @@ function linter(content, options, context, callback) {
 
     lintOptions = assign({}, options, {
         files: context.resourcePath,
-        syntax: path.extname(filePath).replace('.', ''),
         formatter: 'json'
     });
 
