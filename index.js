@@ -5,7 +5,6 @@ var assign = require('deep-assign'),
     chalk = require('chalk'),
     fs = require('fs'),
     loaderUtils = require('loader-utils'),
-    path = require('path'),
     stylelint = require('stylelint');
 
 var defaultOptions = {
