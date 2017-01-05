@@ -1,6 +1,6 @@
 # DEPRECATION NOTICE
 
-This package is not deprecated.  Do not use.  Replace your packages with [postcss-loader]
+This package is now deprecated.  Do not use.  Replace your packages with [postcss-loader]
 or [webpack-stylelint-loader] instead.  
 
 ## Recursively Linting with Stylelint
